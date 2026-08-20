@@ -30,7 +30,6 @@ type SheetProps = {
   title: string;
   titleClassName?: string;
   description?: string;
-  footer?: ClickableChild;
   children?: ReactNode;
 };
 
@@ -39,7 +38,6 @@ export function Sheet({
   title,
   titleClassName,
   description,
-  footer,
   children,
 }: SheetProps) {
   const [open, setOpen] = useState(false);
@@ -81,7 +79,6 @@ export function Sheet({
           ) : null}
         </div>
         {children}
-        {footer ? <div className={styles.footer}>{mergeClick(footer, () => setOpen(false))}</div> : null}
       </Drawer>
     </>
   );

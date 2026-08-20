@@ -23,7 +23,6 @@ export function MobileFilterSheet(props: FilterPanelProps) {
       title="Filters"
       titleClassName="visuallyHidden"
       description="Narrow the feed by categories, date or sources."
-      footer={<Button type="button">Show results</Button>}
     >
       <div className={styles.body}>
         <FilterPanel {...props} />
