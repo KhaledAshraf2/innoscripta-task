@@ -1,0 +1,8 @@
+.input :global(input[type='search']::-webkit-search-cancel-button) {
+  appearance: none;
+}
+
+.clear {
+  min-width: 1.75rem;
+  padding: 0.25rem;
+}

@@ -1,8 +1,31 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
+  "plugins": ["react", "typescript", "oxc", "import", "jsx-a11y"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "pedantic": "off"
+  },
   "rules": {
     "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
+    "react/only-export-components": ["warn", { "allowConstantExport": true }],
+    "react/react-in-jsx-scope": "off",
+    "typescript/no-explicit-any": "error",
+    "typescript/ban-ts-comment": "error",
+    "typescript/consistent-type-imports": "error",
+    "import/no-default-export": "error",
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "eqeqeq": ["error", "smart"],
+    "no-underscore-dangle": ["warn", { "allow": ["_id"] }],
+    "import/no-unassigned-import": ["warn", { "allow": ["**/*.css"] }]
+  },
+  "overrides": [
+    {
+      "files": ["vite.config.ts"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    }
+  ],
+  "ignorePatterns": ["dist", "node_modules"]
 }

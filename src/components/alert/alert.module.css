@@ -1,0 +1,20 @@
+.root {
+  width: 100%;
+}
+
+.title {
+  font-weight: 600;
+}
+
+.description {
+  font-size: 0.875rem;
+}
+
+.description p {
+  margin: 0 0 0.5rem;
+}
+
+.description ul {
+  margin: 0;
+  padding-left: 1rem;
+}

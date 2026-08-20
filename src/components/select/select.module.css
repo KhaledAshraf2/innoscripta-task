@@ -1,0 +1,17 @@
+.root {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.value,
+.placeholder {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.placeholder {
+  color: var(--mui-palette-text-secondary);
+}

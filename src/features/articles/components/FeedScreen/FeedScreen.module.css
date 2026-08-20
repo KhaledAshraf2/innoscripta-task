@@ -1,0 +1,54 @@
+.layout {
+  display: flex;
+  min-height: 0;
+  width: 100%;
+  max-width: 72rem;
+  flex: 1;
+  gap: 1.5rem;
+  margin-inline: auto;
+  padding: 1rem;
+}
+
+.aside {
+  width: 17rem;
+  min-width: 0;
+  flex-shrink: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.main {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.headingRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.heading {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.description,
+.hiddenCount {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--mui-palette-text-secondary);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

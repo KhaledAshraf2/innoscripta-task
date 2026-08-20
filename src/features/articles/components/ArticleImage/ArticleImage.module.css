@@ -1,0 +1,22 @@
+.fallback,
+.image {
+  width: 100%;
+  height: 100%;
+  background: var(--mui-palette-action-hover);
+}
+
+.fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mui-palette-text-secondary);
+}
+
+.icon {
+  font-size: 2rem;
+  opacity: 0.4;
+}
+
+.image {
+  object-fit: cover;
+}

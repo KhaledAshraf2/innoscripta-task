@@ -1,0 +1,22 @@
+.list {
+  display: none;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.label {
+  max-width: 10rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+@media (max-width: 1023px) {
+  .list {
+    display: flex;
+  }
+}

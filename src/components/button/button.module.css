@@ -1,0 +1,12 @@
+.root {
+  gap: 0.5rem;
+}
+
+.root :global(svg) {
+  font-size: 1.125rem;
+}
+
+.icon {
+  min-width: 2.25rem;
+  padding: 0.5rem;
+}

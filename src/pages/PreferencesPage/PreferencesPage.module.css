@@ -1,0 +1,12 @@
+.scroller {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.inner {
+  width: 100%;
+  max-width: 42rem;
+  margin-inline: auto;
+  padding: 1.5rem 1rem;
+}

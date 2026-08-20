@@ -1,0 +1,40 @@
+.paper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.side {
+  width: min(22rem, 100%);
+}
+
+.close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem 3rem 1rem 1rem;
+  border-bottom: 1px solid var(--mui-palette-divider);
+}
+
+.title {
+  font-weight: 600;
+}
+
+.description {
+  margin: 0;
+}
+
+.footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-top: 1px solid var(--mui-palette-divider);
+}
