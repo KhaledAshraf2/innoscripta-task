@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { matchesClientFilters } from '@/features/articles/helpers/matching';
+import { matchesCategory, matchesClientFilters } from '@/features/articles/helpers/matching';
 import type { Article } from '@/features/articles/types';
 
 function makeArticle(overrides: Partial<Article> = {}): Article {
@@ -52,5 +52,14 @@ describe('matchesClientFilters', () => {
         sources: [],
       }),
     ).toBe(true);
+  });
+});
+
+describe('matchesCategory', () => {
+  it('does not treat short aliases as substrings', () => {
+    expect(matchesCategory(makeArticle({ category: 'Business Day' }), 'politics')).toBe(false);
+    expect(matchesCategory(makeArticle({ category: 'Farewell' }), 'health')).toBe(false);
+    expect(matchesCategory(makeArticle({ category: 'U.S.' }), 'politics')).toBe(true);
+    expect(matchesCategory(makeArticle({ category: 'Society' }), 'health')).toBe(true);
   });
 });

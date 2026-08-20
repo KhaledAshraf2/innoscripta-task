@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { FetchPageInput, ProviderAdapter, ProviderPage } from '@/features/articles/api/providers/adapter';
 import { cleanAuthor, nonEmpty } from '@/features/articles/helpers/text';
 import type { Article, ArticleQuery } from '@/features/articles/types';
-import { requestJson } from '@/lib/http';
+import { rejectUnlessProviderOk, requestJson } from '@/lib/http';
 
 /**
  * NewsAPI blocks cross-origin browser requests, so it is always called through
@@ -27,6 +27,8 @@ const newsApiArticleSchema = z.object({
 
 export const newsApiResponseSchema = z.object({
   status: z.string(),
+  code: z.string().nullish(),
+  message: z.string().nullish(),
   totalResults: z.number().nullish(),
   articles: z.array(newsApiArticleSchema).nullish(),
 });
@@ -87,6 +89,8 @@ async function fetchPage({ query, page, apiKey, signal }: FetchPageInput): Promi
     signal,
     headers: { 'X-Api-Key': apiKey },
   });
+
+  rejectUnlessProviderOk(raw.status, 'ok', raw.message);
 
   const articles = mapNewsApiResponse(raw);
   const total = raw.totalResults ?? 0;

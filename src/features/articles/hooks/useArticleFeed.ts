@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { articleFeedQueryOptions } from '@/features/articles/queries';
+import { dedupeArticles, sortByPublishedAtDesc } from '@/features/articles/helpers/dedupe';
 import type { Article, ArticleQuery, ProviderFailure } from '@/features/articles/types';
 
 type UseArticleFeedInput = {
@@ -33,6 +35,9 @@ export type ArticleFeed = {
   refetch: () => unknown;
 };
 
+/** Stop auto-filling after this many pages so a rare author cannot hammer rate limits. */
+const AUTO_FILL_PAGE_LIMIT = 8;
+
 export function useArticleFeed({ query, refine }: UseArticleFeedInput): ArticleFeed {
   const {
     data,
@@ -47,8 +52,14 @@ export function useArticleFeed({ query, refine }: UseArticleFeedInput): ArticleF
   } = useInfiniteQuery(articleFeedQueryOptions(query));
 
   const pages = data?.pages ?? [];
-  const loaded = pages.flatMap((page) => page.articles);
+  const loaded = sortByPublishedAtDesc(dedupeArticles(pages.flatMap((page) => page.articles)));
   const articles = refine ? loaded.filter(refine) : loaded;
+  const stillFilling = articles.length === 0 && hasNextPage && pages.length < AUTO_FILL_PAGE_LIMIT;
+
+  useEffect(() => {
+    if (isPending || isFetching || isError || !stillFilling) return;
+    void fetchNextPage();
+  }, [isPending, isFetching, isError, stillFilling, fetchNextPage]);
 
   // Failures are per page; the newest page reflects the current provider state.
   const failures = pages.at(-1)?.failures ?? [];
@@ -57,14 +68,14 @@ export function useArticleFeed({ query, refine }: UseArticleFeedInput): ArticleF
     articles,
     hiddenCount: loaded.length - articles.length,
     failures,
-    isInitialLoading: isPending,
+    isInitialLoading: isPending || (articles.length === 0 && isFetchingNextPage),
     isRefreshing: isFetching && !isPending && !isFetchingNextPage,
     isFetchingNextPage,
     hasNextPage,
     isError: isError && pages.length === 0,
     error,
     hasNextPageError: isError && pages.length > 0,
-    isEmpty: !isPending && !isError && articles.length === 0,
+    isEmpty: !isPending && !isError && articles.length === 0 && !stillFilling && !isFetchingNextPage,
     fetchNextPage,
     refetch,
   };

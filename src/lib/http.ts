@@ -45,6 +45,25 @@ export function isRetryableApiError(error: unknown): boolean {
   return error.kind === 'http' && error.status !== undefined && error.status >= 500;
 }
 
+/**
+ * Some providers return HTTP 200 with a failure status in the JSON body.
+ * Those must not be treated as an empty successful page.
+ */
+export function rejectUnlessProviderOk(
+  status: string | null | undefined,
+  okValue: string,
+  message?: string | null,
+): void {
+  if (status == null) return;
+  if (status.toLowerCase() === okValue.toLowerCase()) return;
+
+  const trimmed = message?.trim();
+  throw new ApiError({
+    kind: 'provider',
+    message: trimmed && trimmed.length > 0 ? trimmed : 'The news provider reported a failure.',
+  });
+}
+
 type RequestJsonInit<T> = {
   url: string;
   schema: ZodType<T>;

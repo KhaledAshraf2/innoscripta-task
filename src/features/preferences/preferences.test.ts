@@ -105,10 +105,21 @@ describe('matchesPreferences', () => {
     expect(matchesPreferences(makeArticle({ category: 'Sports' }), preferences)).toBe(false);
   });
 
-  it('keeps articles whose category is unknown', () => {
+  it('keeps uncategorized articles when only categories are preferred', () => {
     expect(
       matchesPreferences(makeArticle({ category: null }), makePreferences({ categories: ['health'] })),
     ).toBe(true);
+  });
+
+  it('does not treat a missing category as a match when an author is also required', () => {
+    const preferences = makePreferences({ categories: ['sports'], authors: ['Jane Doe'] });
+
+    expect(matchesPreferences(makeArticle({ category: null, author: 'Jane Doe' }), preferences)).toBe(
+      true,
+    );
+    expect(
+      matchesPreferences(makeArticle({ category: null, author: 'Someone Else' }), preferences),
+    ).toBe(false);
   });
 
   it('matches preferred providers and authors', () => {

@@ -14,7 +14,7 @@ import type {
   ArticleCategory,
   ArticleQuery,
 } from '@/features/articles/types';
-import { requestJson } from '@/lib/http';
+import { requestJson, rejectUnlessProviderOk } from '@/lib/http';
 
 const ENDPOINT = 'https://content.guardianapis.com/search';
 const PAGE_SIZE = 20;
@@ -51,6 +51,7 @@ const guardianResultSchema = z.object({
 export const guardianResponseSchema = z.object({
   response: z.object({
     status: z.string(),
+    message: z.string().nullish(),
     currentPage: z.number().nullish(),
     pages: z.number().nullish(),
     results: z.array(guardianResultSchema).nullish(),
@@ -59,11 +60,7 @@ export const guardianResponseSchema = z.object({
 
 type GuardianResponse = z.infer<typeof guardianResponseSchema>;
 
-export function buildGuardianUrl(
-  query: ArticleQuery,
-  page: number,
-  apiKey: string,
-): string {
+export function buildGuardianUrl(query: ArticleQuery, page: number, apiKey: string): string {
   const params = new URLSearchParams({
     'api-key': apiKey,
     'order-by': 'newest',
@@ -130,6 +127,8 @@ async function fetchPage({
     schema: guardianResponseSchema,
     signal,
   });
+
+  rejectUnlessProviderOk(raw.response.status, 'ok', raw.response.message);
 
   return {
     articles: mapGuardianResponse(raw),

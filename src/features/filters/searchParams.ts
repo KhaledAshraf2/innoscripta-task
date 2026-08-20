@@ -33,10 +33,30 @@ const SEARCH_PARAM_KEYS = {
   source: 'source',
 } as const;
 
-const isoDateSchema = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/)
-  .refine((value) => !Number.isNaN(Date.parse(value)), 'Not a real calendar date');
+/** Local calendar date as `yyyy-MM-dd`. UTC `toISOString()` is wrong near midnight. */
+export function toLocalIsoDate(date: Date = new Date()): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/** Rejects overflow dates such as 31 February, which `Date.parse` would accept. */
+export function isCalendarDate(value: string): boolean {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return false;
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const utc = new Date(Date.UTC(year, month - 1, day));
+
+  return (
+    utc.getUTCFullYear() === year && utc.getUTCMonth() === month - 1 && utc.getUTCDate() === day
+  );
+}
+
+const isoDateSchema = z.string().refine(isCalendarDate, 'Not a real calendar date');
 
 const categorySchema = z.enum(ARTICLE_CATEGORIES);
 const providerSchema = z.enum(PROVIDER_IDS);

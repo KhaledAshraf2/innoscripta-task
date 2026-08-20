@@ -5,6 +5,7 @@ import { Input } from '@/components/input';
 import { Label } from '@/components/label';
 import { CategoryMultiSelect } from '@/features/articles/components/CategoryMultiSelect';
 import { SourceMultiSelect } from '@/features/articles/components/SourceMultiSelect';
+import { toLocalIsoDate } from '@/features/filters/searchParams';
 import type { FilterPanelProps } from '@/features/filters/useArticleFilters';
 import styles from './FilterPanel.module.css';
 
@@ -21,7 +22,7 @@ export function FilterPanel({
   const toId = `${fieldId}-to`;
   const sourceId = `${fieldId}-source`;
   const dateErrorId = `${fieldId}-date-error`;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = toLocalIsoDate();
 
   return (
     <div className={styles.panel}>

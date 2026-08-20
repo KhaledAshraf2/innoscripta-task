@@ -43,7 +43,9 @@ export async function aggregateArticles({
   }
 
   const settled = await Promise.allSettled(
-    providers.map((provider) => provider.adapter.fetchPage({ query, page, apiKey: provider.apiKey, signal })),
+    providers.map((provider) =>
+      provider.adapter.fetchPage({ query, page, apiKey: provider.apiKey, signal }),
+    ),
   );
 
   const collected: Article[] = [];

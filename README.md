@@ -26,9 +26,9 @@ links to where each one is created, so it stays usable with one, two or three pr
 
 Notes:
 
-- **NewsAPI blocks cross-origin browser requests.** It is called through the same-origin path
-  `/proxy/newsapi`, which the Vite dev and preview servers proxy and nginx mirrors in the container,
-  so no CORS workaround is needed in any environment.
+- **NewsAPI CORS.** NewsAPI rejects browser requests from other origins, so the app always
+  calls it through `/proxy/newsapi`. The Vite dev/preview server and nginx both forward that path.
+  Guardian and NYT are called from the browser.
 - **NYT allows 5 requests/minute.** A `429` is converted into a typed `rate_limit` error, retried
   with backoff, and reported as a partial failure rather than breaking the feed.
 
@@ -49,8 +49,8 @@ Notes:
 docker compose up --build          # http://localhost:8080
 ```
 
-Vite inlines `VITE_*` variables at build time, so the keys are **build arguments**. Compose reads
-them from your shell or from a `.env` file beside `docker-compose.yml`. Without compose:
+Vite inlines `VITE_*` keys at **build** time. Compose reads them from your shell or from a `.env`
+file beside `docker-compose.yml`.
 
 ```bash
 docker build \
@@ -118,14 +118,15 @@ normalization where it does not.
 | ---------- | --------------------------------------------- | ----------------------- | ------------------------- |
 | Keyword    | `q`                                           | `q`                     | `q`                       |
 | Date range | `from` / `to` (end of day)                    | `from-date` / `to-date` | `begin_date` / `end_date` |
-| Category   | not supported — used as keywords (documented) | `section` (OR-joined)   | `fq=section_name:(...)`   |
+| Category   | not supported — used as keywords (documented) | `section` (OR-joined)   | `fq=section_name:("A" OR "B")` |
 | Source     | query selects that adapter only               | same                    | same                      |
 | Author     | after normalization, case-insensitive         | same                    | same                      |
 | Page size  | 20                                            | 20                      | 10 (fixed by the API)     |
 
 `/v2/everything` has no category facet, so selected categories are added to the keyword query.
-Articles from NewsAPI carry no category, and an unknown category is never held against an article —
-that keeps a personalized feed from hiding results it cannot classify.
+Articles from NewsAPI carry no category; that absence is skipped in preference matching so an
+author filter still applies. Category aliases are matched as whole tokens (`us` does not match
+`business`).
 
 ### Aggregation and partial failures
 

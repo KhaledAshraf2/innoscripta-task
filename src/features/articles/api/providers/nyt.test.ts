@@ -13,25 +13,28 @@ const baseQuery: ArticleQuery = {
 describe('buildNytUrl', () => {
   it('converts to zero-based paging and compact dates', () => {
     const params = new URL(
-      buildNytUrl({ ...baseQuery, from: '2026-01-05', to: '2026-01-09' }, 1, 'secret'),
+      buildNytUrl({ ...baseQuery, from: '2026-01-05', to: '2026-01-09' }, 1, 'nyt-key'),
+      'http://x',
     ).searchParams;
 
     expect(params.get('page')).toBe('0');
     expect(params.get('begin_date')).toBe('20260105');
     expect(params.get('end_date')).toBe('20260109');
+    expect(params.get('api-key')).toBe('nyt-key');
   });
 
-  it('builds a quoted section facet and skips categories without a mapping', () => {
+  it('builds an OR section facet and skips categories without a mapping', () => {
     const params = new URL(
-      buildNytUrl({ ...baseQuery, categories: ['business', 'general'] }, 2, 'secret'),
+      buildNytUrl({ ...baseQuery, categories: ['business', 'technology', 'general'] }, 2, 'k'),
+      'http://x',
     ).searchParams;
 
-    expect(params.get('fq')).toBe('section_name:("Business Day")');
+    expect(params.get('fq')).toBe('section_name:("Business Day" OR "Technology")');
     expect(params.get('page')).toBe('1');
   });
 
   it('omits the facet when no category maps to a section', () => {
-    const params = new URL(buildNytUrl({ ...baseQuery, categories: ['general'] }, 1, 'k'))
+    const params = new URL(buildNytUrl({ ...baseQuery, categories: ['general'] }, 1, 'k'), 'http://x')
       .searchParams;
     expect(params.has('fq')).toBe(false);
   });

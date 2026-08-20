@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { FetchPageInput, ProviderAdapter, ProviderPage } from '@/features/articles/api/providers/adapter';
 import { cleanAuthor, nonEmpty } from '@/features/articles/helpers/text';
 import type { Article, ArticleCategory, ArticleQuery } from '@/features/articles/types';
-import { requestJson } from '@/lib/http';
+import { rejectUnlessProviderOk, requestJson } from '@/lib/http';
 
 const ENDPOINT = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
 /** Article Search returns a fixed 10 documents per page and caps at page 100. */
@@ -51,6 +51,8 @@ const nytDocSchema = z.object({
 
 export const nytResponseSchema = z.object({
   status: z.string().nullish(),
+  faults: z.array(z.object({ faultstring: z.string().nullish() })).nullish(),
+  message: z.string().nullish(),
   response: z.object({
     docs: z.array(nytDocSchema).nullish(),
     meta: z.object({ hits: z.number().nullish() }).nullish(),
@@ -82,7 +84,7 @@ export function buildNytUrl(query: ArticleQuery, page: number, apiKey: string): 
     .filter((section): section is string => section !== null);
 
   if (sections.length > 0) {
-    params.set('fq', `section_name:(${sections.map((section) => `"${section}"`).join(' ')})`);
+    params.set('fq', `section_name:(${sections.map((section) => `"${section}"`).join(' OR ')})`);
   }
 
   return `${ENDPOINT}?${params.toString()}`;
@@ -132,6 +134,8 @@ async function fetchPage({ query, page, apiKey, signal }: FetchPageInput): Promi
     schema: nytResponseSchema,
     signal,
   });
+
+  rejectUnlessProviderOk(raw.status, 'OK', raw.message ?? raw.faults?.[0]?.faultstring);
 
   const docCount = raw.response.docs?.length ?? 0;
 

@@ -3,9 +3,11 @@ import {
   buildArticleQuery,
   countActiveFilters,
   DEFAULT_FILTERS,
+  isCalendarDate,
   isDateRangeValid,
   parseFilters,
   serializeFilters,
+  toLocalIsoDate,
 } from '@/features/filters/searchParams';
 
 describe('parseFilters', () => {
@@ -52,6 +54,12 @@ describe('parseFilters', () => {
     expect(filters.sources).toEqual([]);
   });
 
+  it('drops calendar dates that are not real days', () => {
+    expect(parseFilters(new URLSearchParams('from=2026-02-31')).from).toBe(null);
+    expect(isCalendarDate('2026-02-31')).toBe(false);
+    expect(isCalendarDate('2026-02-01')).toBe(true);
+  });
+
   it('returns defaults for an empty query string', () => {
     expect(parseFilters(new URLSearchParams())).toEqual(DEFAULT_FILTERS);
   });
@@ -94,6 +102,10 @@ describe('date range validation', () => {
     );
     expect(isDateRangeValid({ ...DEFAULT_FILTERS, from: '2026-01-01', to: '2026-02-01' })).toBe(true);
     expect(isDateRangeValid({ ...DEFAULT_FILTERS, from: '2026-01-01' })).toBe(true);
+  });
+
+  it('uses the local calendar date rather than UTC', () => {
+    expect(toLocalIsoDate(new Date(2026, 0, 9, 1, 0, 0))).toBe('2026-01-09');
   });
 });
 

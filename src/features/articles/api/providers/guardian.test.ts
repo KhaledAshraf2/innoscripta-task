@@ -26,8 +26,9 @@ describe('buildGuardianUrl', () => {
           to: '2026-02-01',
         },
         2,
-        'secret',
+        'guardian-key',
       ),
+      'http://x',
     ).searchParams;
 
     expect(params.get('q')).toBe('climate');
@@ -35,12 +36,12 @@ describe('buildGuardianUrl', () => {
     expect(params.get('from-date')).toBe('2026-01-01');
     expect(params.get('to-date')).toBe('2026-02-01');
     expect(params.get('page')).toBe('2');
-    expect(params.get('api-key')).toBe('secret');
+    expect(params.get('api-key')).toBe('guardian-key');
     expect(params.get('order-by')).toBe('newest');
   });
 
   it('omits parameters that are not set', () => {
-    const params = new URL(buildGuardianUrl(baseQuery, 1, 'secret')).searchParams;
+    const params = new URL(buildGuardianUrl(baseQuery, 1, 'k'), 'http://x').searchParams;
 
     expect(params.has('q')).toBe(false);
     expect(params.has('section')).toBe(false);

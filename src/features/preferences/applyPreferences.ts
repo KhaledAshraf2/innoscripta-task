@@ -5,8 +5,10 @@ import { hasPreferences, type Preferences } from '@/features/preferences/storage
 /**
  * Preferred sources are a hard filter: an excluded provider never stays on the
  * For you feed. Categories and authors stay a union so one empty dimension
- * cannot hide everything else. NewsAPI has no category, so an unknown category
- * is not held against an article when categories are selected.
+ * cannot hide everything else.
+ *
+ * NewsAPI has no category, so a missing category is skipped rather than treated
+ * as a match. That way an author filter still applies to those articles.
  */
 export function matchesPreferences(article: Article, preferences: Preferences): boolean {
   if (!hasPreferences(preferences)) return true;
@@ -17,11 +19,8 @@ export function matchesPreferences(article: Article, preferences: Preferences): 
 
   const signals: boolean[] = [];
 
-  if (preferences.categories.length > 0) {
-    signals.push(
-      article.category === null ||
-        preferences.categories.some((category) => matchesCategory(article, category)),
-    );
+  if (preferences.categories.length > 0 && article.category !== null) {
+    signals.push(preferences.categories.some((category) => matchesCategory(article, category)));
   }
 
   if (preferences.authors.length > 0) {

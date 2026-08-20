@@ -4,7 +4,7 @@ import type { Article, ArticleCategory, ProviderId } from '@/features/articles/t
 /**
  * Providers label sections with their own vocabulary ("society", "Business
  * Day", "Arts"), so normalized categories carry a documented alias list that is
- * matched case- and accent-insensitively.
+ * matched as whole tokens, never as substrings ("us" must not match "business").
  */
 const CATEGORY_ALIASES: Record<ArticleCategory, readonly string[]> = {
   general: ['general', 'news', 'home'],
@@ -26,23 +26,19 @@ const CATEGORY_ALIASES: Record<ArticleCategory, readonly string[]> = {
   ],
 };
 
-function looselyIncludes(haystack: string, needle: string): boolean {
-  return (
-    haystack === needle ||
-    haystack.includes(needle) ||
-    needle.includes(haystack)
-  );
+function matchesAlias(haystack: string, alias: string): boolean {
+  const foldedHaystack = foldCase(haystack);
+  const foldedAlias = foldCase(alias);
+  if (foldedHaystack === foldedAlias) return true;
+
+  const escaped = foldedAlias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`(?:^|[^a-z0-9])${escaped}(?:$|[^a-z0-9])`).test(foldedHaystack);
 }
 
-export function matchesCategory(
-  article: Article,
-  category: ArticleCategory,
-): boolean {
+export function matchesCategory(article: Article, category: ArticleCategory): boolean {
   if (article.category === null) return false;
-  const folded = foldCase(article.category);
-  return CATEGORY_ALIASES[category].some((alias) =>
-    looselyIncludes(folded, alias),
-  );
+  const label = article.category;
+  return CATEGORY_ALIASES[category].some((alias) => matchesAlias(label, alias));
 }
 
 /** Bylines list several people, so a preferred author only has to appear. */
