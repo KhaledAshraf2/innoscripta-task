@@ -130,6 +130,64 @@ describe('aggregateArticles', () => {
     ).rejects.toThrow('All news providers are currently unavailable.');
   });
 
+  it('keeps the feed going when a provider hits its result cap', async () => {
+    mockProviders([
+      {
+        id: 'guardian',
+        result: Promise.resolve({ articles: [makeArticle('guardian')], hasMore: true }),
+      },
+      {
+        id: 'newsapi',
+        result: Promise.reject(
+          new ApiError({
+            kind: 'result_limit',
+            message: 'This provider has no more results on the current plan.',
+          }),
+        ),
+      },
+    ]);
+
+    const page = await aggregateArticles({ query, page: 6, signal: new AbortController().signal });
+
+    expect(page.articles).toHaveLength(1);
+    expect(page.hasMore).toBe(true);
+    expect(page.failures).toEqual([
+      {
+        provider: 'newsapi',
+        kind: 'result_limit',
+        message: 'This provider has no more results on the current plan.',
+      },
+    ]);
+  });
+
+  it('does not fail the page when the only provider has hit its result cap', async () => {
+    mockProviders([
+      {
+        id: 'newsapi',
+        result: Promise.reject(
+          new ApiError({
+            kind: 'result_limit',
+            message: 'This provider has no more results on the current plan.',
+          }),
+        ),
+      },
+    ]);
+
+    await expect(
+      aggregateArticles({ query, page: 6, signal: new AbortController().signal }),
+    ).resolves.toEqual({
+      articles: [],
+      hasMore: false,
+      failures: [
+        {
+          provider: 'newsapi',
+          kind: 'result_limit',
+          message: 'This provider has no more results on the current plan.',
+        },
+      ],
+    });
+  });
+
   it('returns an empty page when no provider is configured', async () => {
     mockProviders([]);
 

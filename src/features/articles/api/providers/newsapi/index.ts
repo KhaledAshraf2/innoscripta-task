@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { FetchPageInput, ProviderAdapter, ProviderPage } from '@/features/articles/api/providers/adapter';
 import { cleanAuthor, nonEmpty } from '@/features/articles/helpers/text';
 import type { Article, ArticleQuery } from '@/features/articles/types';
-import { rejectUnlessProviderOk, requestJson } from '@/lib/http';
+import { ApiError, rejectUnlessProviderOk, requestJson } from '@/lib/http';
 
 /**
  * NewsAPI blocks cross-origin browser requests, so it is always called through
@@ -89,6 +89,14 @@ async function fetchPage({ query, page, apiKey, signal }: FetchPageInput): Promi
     signal,
     headers: { 'X-Api-Key': apiKey },
   });
+
+  if (raw.code === 'maximumResultsReached') {
+    throw new ApiError({
+      kind: 'result_limit',
+      message:
+        raw.message?.trim() || 'This provider has no more results on the current plan.',
+    });
+  }
 
   rejectUnlessProviderOk(raw.status, 'ok', raw.message);
 

@@ -31,6 +31,8 @@ Notes:
   Guardian and NYT are called from the browser.
 - **NYT allows 5 requests/minute.** A `429` is converted into a typed `rate_limit` error, retried
   with backoff, and reported as a partial failure rather than breaking the feed.
+- **NewsAPI developer plan stops at 100 results.** A `426` is converted into a typed `result_limit`
+  error, shown as a warning, and not retried. Other providers keep loading.
 
 ## Scripts
 

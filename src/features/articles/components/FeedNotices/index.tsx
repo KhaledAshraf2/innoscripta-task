@@ -10,9 +10,13 @@ import styles from './FeedNotices.module.css';
 export function PartialFailureNotice({ failures }: { failures: readonly ProviderFailure[] }) {
   if (failures.length === 0) return null;
 
+  const limited = failures.every(
+    (failure) => failure.kind === 'rate_limit' || failure.kind === 'result_limit',
+  );
+
   return (
     <Alert variant="warning">
-      <AlertTitle>Some sources are unavailable</AlertTitle>
+      <AlertTitle>{limited ? 'Some sources are limited' : 'Some sources are unavailable'}</AlertTitle>
       <AlertDescription>
         <ul>
           {failures.map((failure) => (

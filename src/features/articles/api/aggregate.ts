@@ -68,8 +68,10 @@ export async function aggregateArticles({
     failures.push(toFailure(provider.id, result.reason));
   });
 
-  if (failures.length === providers.length) {
-    const [first] = failures;
+  const blockingFailures = failures.filter((failure) => failure.kind !== 'result_limit');
+
+  if (blockingFailures.length === providers.length) {
+    const [first] = blockingFailures;
     throw new ApiError({
       kind: first?.kind ?? 'provider',
       message:

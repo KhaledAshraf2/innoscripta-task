@@ -7,6 +7,8 @@ export type ApiErrorKind =
   | 'http'
   /** Provider quota exceeded; worth retrying with backoff. */
   | 'rate_limit'
+  /** Plan cap reached (NewsAPI 426 after 100 results). Not worth retrying. */
+  | 'result_limit'
   /** Response body did not match the schema we validate at the boundary. */
   | 'parse'
   /** Transport succeeded but the provider reported a failure in the payload. */
@@ -45,6 +47,30 @@ export function isRetryableApiError(error: unknown): boolean {
   return (
     error.kind === 'http' && error.status !== undefined && error.status >= 500
   );
+}
+
+function apiErrorFromHttpStatus(status: number): ApiError {
+  if (status === 429) {
+    return new ApiError({
+      kind: 'rate_limit',
+      status,
+      message: 'Rate limit reached for this provider.',
+    });
+  }
+
+  if (status === 426) {
+    return new ApiError({
+      kind: 'result_limit',
+      status,
+      message: 'This provider has no more results on the current plan.',
+    });
+  }
+
+  return new ApiError({
+    kind: 'http',
+    status,
+    message: `Request failed with status ${status}.`,
+  });
 }
 
 /**
@@ -104,14 +130,7 @@ export async function requestJson<T>({
   }
 
   if (!response.ok) {
-    throw new ApiError({
-      kind: response.status === 429 ? 'rate_limit' : 'http',
-      status: response.status,
-      message:
-        response.status === 429
-          ? 'Rate limit reached for this provider.'
-          : `Request failed with status ${response.status}.`,
-    });
+    throw apiErrorFromHttpStatus(response.status);
   }
 
   let payload: unknown;
