@@ -14,8 +14,6 @@ dist-ssr
 
 .pnpm-store
 
-# Extra env files (local overrides). `.env` is tracked so Compose and Vite
-# share the same keys.
 .env.*
 !.env.example
 
