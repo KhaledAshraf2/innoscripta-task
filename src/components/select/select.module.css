@@ -3,6 +3,12 @@
   min-width: 0;
 }
 
+.root :global(.MuiSelect-select) {
+  display: block;
+  overflow: hidden;
+  min-width: 0;
+}
+
 .value,
 .placeholder {
   display: block;
@@ -14,4 +20,8 @@
 
 .placeholder {
   color: var(--mui-palette-text-secondary);
+}
+
+.optionCheckbox {
+  pointer-events: none;
 }

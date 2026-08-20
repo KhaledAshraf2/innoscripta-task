@@ -4,11 +4,10 @@ import styles from './ArticleImage.module.css';
 
 type ArticleImageProps = {
   src: string | null;
-  alt: string;
 };
 
 /** Fixed aspect ratio keeps cards from jumping while images load. */
-export function ArticleImage({ src, alt }: ArticleImageProps) {
+export function ArticleImage({ src }: ArticleImageProps) {
   const [hasFailed, setHasFailed] = useState(false);
 
   if (src === null || hasFailed) {
@@ -22,7 +21,7 @@ export function ArticleImage({ src, alt }: ArticleImageProps) {
   return (
     <img
       src={src}
-      alt={alt}
+      alt=""
       loading="lazy"
       decoding="async"
       onError={() => setHasFailed(true)}

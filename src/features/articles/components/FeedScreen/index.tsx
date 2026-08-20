@@ -16,7 +16,10 @@ import type { ArticleFeed as ArticleFeedState } from '@/features/articles/hooks/
 import { ActiveFilterSummary } from '@/features/filters/components/ActiveFilterSummary';
 import { FilterPanel } from '@/features/filters/components/FilterPanel';
 import { MobileFilterSheet } from '@/features/filters/components/MobileFilterSheet';
-import type { ArticleFiltersController } from '@/features/filters/useArticleFilters';
+import type {
+  ArticleFiltersController,
+  FilterPanelProps,
+} from '@/features/filters/useArticleFilters';
 import styles from './FeedScreen.module.css';
 
 type FeedScreenProps = {
@@ -29,7 +32,7 @@ type FeedScreenProps = {
 export function FeedScreen({ heading, description, controller, feed }: FeedScreenProps) {
   const isDesktop = useMediaQuery('(min-width: 1024px)', { noSsr: true });
   const { filters, setFilters, clearAll, activeFilterCount, dateRangeError } = controller;
-  const filterProps = {
+  const filterProps: FilterPanelProps = {
     filters,
     setFilters,
     clearAll,

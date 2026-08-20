@@ -20,6 +20,11 @@ export type ArticleFiltersController = {
   dateRangeError: string | null;
 };
 
+export type FilterPanelProps = Pick<
+  ArticleFiltersController,
+  'filters' | 'setFilters' | 'clearAll' | 'activeFilterCount' | 'dateRangeError'
+>;
+
 export function useArticleFilters(): ArticleFiltersController {
   const [searchParams, setSearchParams] = useSearchParams();
   const filters = parseFilters(searchParams);

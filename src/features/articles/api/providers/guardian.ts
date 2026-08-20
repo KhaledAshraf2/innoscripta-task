@@ -57,7 +57,7 @@ export const guardianResponseSchema = z.object({
   }),
 });
 
-export type GuardianResponse = z.infer<typeof guardianResponseSchema>;
+type GuardianResponse = z.infer<typeof guardianResponseSchema>;
 
 export function buildGuardianUrl(
   query: ArticleQuery,
@@ -128,7 +128,6 @@ async function fetchPage({
   const raw = await requestJson({
     url: buildGuardianUrl(query, page, apiKey),
     schema: guardianResponseSchema,
-    source: 'guardian',
     signal,
   });
 
@@ -139,6 +138,5 @@ async function fetchPage({
 }
 
 export const guardianAdapter: ProviderAdapter = {
-  id: 'guardian',
   fetchPage,
 };

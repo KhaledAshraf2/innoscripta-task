@@ -40,13 +40,6 @@ export function MultiSelect({
       size="small"
       fullWidth
       className={styles.root}
-      sx={{
-        '& .MuiSelect-select': {
-          display: 'block',
-          overflow: 'hidden',
-          minWidth: 0,
-        },
-      }}
       renderValue={() => (
         <span className={value.length === 0 ? styles.placeholder : styles.value}>{summary}</span>
       )}
@@ -59,7 +52,11 @@ export function MultiSelect({
     >
       {options.map((option) => (
         <MenuItem key={option.value} value={option.value}>
-          <Checkbox checked={value.includes(option.value)} size="small" sx={{ pointerEvents: 'none' }} />
+          <Checkbox
+            checked={value.includes(option.value)}
+            size="small"
+            className={styles.optionCheckbox}
+          />
           <ListItemText primary={option.label} />
         </MenuItem>
       ))}

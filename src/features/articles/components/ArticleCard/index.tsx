@@ -18,7 +18,7 @@ export function ArticleCard({ article }: { article: Article }) {
   return (
     <Card component="article" className={styles.card}>
       <div className={styles.media}>
-        <ArticleImage src={article.imageUrl} alt="" />
+        <ArticleImage src={article.imageUrl} />
       </div>
 
       <CardContent className={styles.content}>

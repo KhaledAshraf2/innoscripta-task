@@ -27,7 +27,7 @@ type OwnProps = {
   children?: ReactNode;
 };
 
-export type ButtonProps<C extends ElementType = 'button'> = OwnProps & {
+type ButtonProps<C extends ElementType = 'button'> = OwnProps & {
   component?: C;
 } & Omit<ComponentPropsWithoutRef<C>, keyof OwnProps>;
 

@@ -11,10 +11,9 @@ type FeedPlaceholderProps = {
   title: string;
   description: string;
   action?: { label: string; onClick: () => unknown };
-  children?: ReactNode;
 };
 
-function FeedPlaceholder({ icon, title, description, action, children }: FeedPlaceholderProps) {
+function FeedPlaceholder({ icon, title, description, action }: FeedPlaceholderProps) {
   return (
     <Card>
       <CardContent className={styles.content}>
@@ -28,7 +27,6 @@ function FeedPlaceholder({ icon, title, description, action, children }: FeedPla
             {action.label}
           </Button>
         )}
-        {children}
       </CardContent>
     </Card>
   );

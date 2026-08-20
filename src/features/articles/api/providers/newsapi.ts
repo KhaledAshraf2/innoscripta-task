@@ -31,7 +31,7 @@ export const newsApiResponseSchema = z.object({
   articles: z.array(newsApiArticleSchema).nullish(),
 });
 
-export type NewsApiResponse = z.infer<typeof newsApiResponseSchema>;
+type NewsApiResponse = z.infer<typeof newsApiResponseSchema>;
 
 function newsApiQuery(query: ArticleQuery): string {
   const categories = query.categories.join(' OR ');
@@ -84,7 +84,6 @@ async function fetchPage({ query, page, apiKey, signal }: FetchPageInput): Promi
   const raw = await requestJson({
     url: buildNewsApiUrl(query, page),
     schema: newsApiResponseSchema,
-    source: 'newsapi',
     signal,
     headers: { 'X-Api-Key': apiKey },
   });
@@ -96,6 +95,5 @@ async function fetchPage({ query, page, apiKey, signal }: FetchPageInput): Promi
 }
 
 export const newsApiAdapter: ProviderAdapter = {
-  id: 'newsapi',
   fetchPage,
 };

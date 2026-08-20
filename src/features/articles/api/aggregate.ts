@@ -70,7 +70,6 @@ export async function aggregateArticles({
     const [first] = failures;
     throw new ApiError({
       kind: first?.kind ?? 'provider',
-      source: 'aggregate',
       message:
         providers.length === 1
           ? (first?.message ?? 'The news provider is unavailable.')

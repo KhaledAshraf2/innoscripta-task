@@ -43,7 +43,7 @@ function mockProviders(providers: readonly FakeProvider[]): void {
     providers.map((provider) => ({
       id: provider.id,
       apiKey: 'test-key',
-      adapter: { id: provider.id, fetchPage: () => provider.result },
+      adapter: { fetchPage: () => provider.result },
     })),
   );
 }
@@ -100,7 +100,7 @@ describe('aggregateArticles', () => {
       {
         id: 'newsapi',
         result: Promise.reject(
-          new ApiError({ kind: 'rate_limit', source: 'newsapi', message: 'Rate limit reached.' }),
+          new ApiError({ kind: 'rate_limit', message: 'Rate limit reached.' }),
         ),
       },
     ]);
@@ -117,11 +117,11 @@ describe('aggregateArticles', () => {
     mockProviders([
       {
         id: 'guardian',
-        result: Promise.reject(new ApiError({ kind: 'network', source: 'guardian', message: 'Offline.' })),
+        result: Promise.reject(new ApiError({ kind: 'network', message: 'Offline.' })),
       },
       {
         id: 'nyt',
-        result: Promise.reject(new ApiError({ kind: 'network', source: 'nyt', message: 'Offline.' })),
+        result: Promise.reject(new ApiError({ kind: 'network', message: 'Offline.' })),
       },
     ]);
 

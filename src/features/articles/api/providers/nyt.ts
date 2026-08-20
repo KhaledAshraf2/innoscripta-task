@@ -57,7 +57,7 @@ export const nytResponseSchema = z.object({
   }),
 });
 
-export type NytResponse = z.infer<typeof nytResponseSchema>;
+type NytResponse = z.infer<typeof nytResponseSchema>;
 
 type NytDoc = z.infer<typeof nytDocSchema>;
 
@@ -130,7 +130,6 @@ async function fetchPage({ query, page, apiKey, signal }: FetchPageInput): Promi
   const raw = await requestJson({
     url: buildNytUrl(query, page, apiKey),
     schema: nytResponseSchema,
-    source: 'nyt',
     signal,
   });
 
@@ -143,6 +142,5 @@ async function fetchPage({ query, page, apiKey, signal }: FetchPageInput): Promi
 }
 
 export const nytAdapter: ProviderAdapter = {
-  id: 'nyt',
   fetchPage,
 };

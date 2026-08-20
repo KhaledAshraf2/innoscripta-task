@@ -40,14 +40,6 @@ export const ARTICLE_CATEGORY_LABELS: Record<ArticleCategory, string> = {
   entertainment: 'Entertainment',
 };
 
-export function isArticleCategory(value: string): value is ArticleCategory {
-  return ARTICLE_CATEGORIES.includes(value as ArticleCategory);
-}
-
-export function isProviderId(value: string): value is ProviderId {
-  return PROVIDER_IDS.includes(value as ProviderId);
-}
-
 /** Normalized article. No provider-specific field ever reaches a component. */
 export type Article = {
   id: string;

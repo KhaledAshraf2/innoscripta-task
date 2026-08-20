@@ -15,7 +15,7 @@ type TokenListEditorProps = {
   onRemove: (value: string) => void;
 };
 
-/** Free-text list editor: authors and publishers cannot be enumerated upfront. */
+/** Free-text list editor for values that cannot be enumerated upfront. */
 export function TokenListEditor({
   label,
   description,

@@ -1,5 +1,4 @@
 import TuneIcon from '@mui/icons-material/Tune';
-import type { ComponentProps } from 'react';
 import { Badge } from '@/components/badge';
 import { Button } from '@/components/button';
 import {
@@ -13,15 +12,14 @@ import {
   SheetTrigger,
 } from '@/components/sheet';
 import { FilterPanel } from '@/features/filters/components/FilterPanel';
+import type { FilterPanelProps } from '@/features/filters/useArticleFilters';
 import styles from './MobileFilterSheet.module.css';
 
-type MobileFilterSheetProps = ComponentProps<typeof FilterPanel>;
-
-export function MobileFilterSheet(props: MobileFilterSheetProps) {
+export function MobileFilterSheet(props: FilterPanelProps) {
   return (
     <Sheet>
       <SheetTrigger>
-        <Button type="button" variant="outline" size="sm" className={styles.trigger}>
+        <Button type="button" variant="outline" size="sm">
           <TuneIcon fontSize="small" />
           Filters
           {props.activeFilterCount > 0 && (

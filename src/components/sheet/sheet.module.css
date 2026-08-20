@@ -2,9 +2,6 @@
   position: relative;
   display: flex;
   flex-direction: column;
-}
-
-.side {
   width: min(22rem, 100%);
 }
 

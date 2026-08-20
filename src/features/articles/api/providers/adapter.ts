@@ -1,4 +1,4 @@
-import type { Article, ArticleQuery, ProviderId } from '@/features/articles/types';
+import type { Article, ArticleQuery } from '@/features/articles/types';
 
 export type ProviderPage = {
   articles: readonly Article[];
@@ -14,6 +14,5 @@ export type FetchPageInput = {
 };
 
 export type ProviderAdapter = {
-  id: ProviderId;
   fetchPage: (input: FetchPageInput) => Promise<ProviderPage>;
 };

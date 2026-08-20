@@ -14,21 +14,18 @@ export type ApiErrorKind =
 
 type ApiErrorInit = {
   kind: ApiErrorKind;
-  source: string;
   message: string;
   status?: number;
 };
 
 export class ApiError extends Error {
   readonly kind: ApiErrorKind;
-  readonly source: string;
   readonly status: number | undefined;
 
-  constructor({ kind, source, message, status }: ApiErrorInit) {
+  constructor({ kind, message, status }: ApiErrorInit) {
     super(message);
     this.name = 'ApiError';
     this.kind = kind;
-    this.source = source;
     this.status = status;
   }
 }
@@ -51,8 +48,6 @@ export function isRetryableApiError(error: unknown): boolean {
 type RequestJsonInit<T> = {
   url: string;
   schema: ZodType<T>;
-  /** Provider identifier used for error attribution in the UI. */
-  source: string;
   signal: AbortSignal;
   headers?: Record<string, string>;
 };
@@ -64,7 +59,6 @@ type RequestJsonInit<T> = {
 export async function requestJson<T>({
   url,
   schema,
-  source,
   signal,
   headers,
 }: RequestJsonInit<T>): Promise<T> {
@@ -80,7 +74,6 @@ export async function requestJson<T>({
     if (isAbortError(error)) throw error;
     throw new ApiError({
       kind: 'network',
-      source,
       message: 'Could not reach the service. Check your connection and try again.',
     });
   }
@@ -88,7 +81,6 @@ export async function requestJson<T>({
   if (!response.ok) {
     throw new ApiError({
       kind: response.status === 429 ? 'rate_limit' : 'http',
-      source,
       status: response.status,
       message:
         response.status === 429
@@ -101,7 +93,7 @@ export async function requestJson<T>({
   try {
     payload = await response.json();
   } catch {
-    throw new ApiError({ kind: 'parse', source, message: 'Response was not valid JSON.' });
+    throw new ApiError({ kind: 'parse', message: 'Response was not valid JSON.' });
   }
 
   const parsed = schema.safeParse(payload);
@@ -110,7 +102,6 @@ export async function requestJson<T>({
     const path = issue?.path.join('.');
     throw new ApiError({
       kind: 'parse',
-      source,
       message: path
         ? `Unexpected response shape at "${path}".`
         : 'Response did not match the expected shape.',

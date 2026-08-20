@@ -5,13 +5,8 @@ import { Input } from '@/components/input';
 import { Label } from '@/components/label';
 import { CategoryMultiSelect } from '@/features/articles/components/CategoryMultiSelect';
 import { SourceMultiSelect } from '@/features/articles/components/SourceMultiSelect';
-import type { ArticleFiltersController } from '@/features/filters/useArticleFilters';
+import type { FilterPanelProps } from '@/features/filters/useArticleFilters';
 import styles from './FilterPanel.module.css';
-
-type FilterPanelProps = Pick<
-  ArticleFiltersController,
-  'filters' | 'setFilters' | 'clearAll' | 'activeFilterCount' | 'dateRangeError'
->;
 
 export function FilterPanel({
   filters,

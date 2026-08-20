@@ -43,7 +43,8 @@ export function ProviderSetupNotice() {
         <ul>
           {UNCONFIGURED_PROVIDERS.map((provider) => (
             <li key={provider.id}>
-              <code className={styles.code}>{provider.envVar}</code> for {provider.label} —{' '}
+              <code className={styles.code}>{provider.envVar}</code> for{' '}
+              {PROVIDER_LABELS[provider.id]} —{' '}
               <a
                 href={provider.docsUrl}
                 target="_blank"

@@ -52,7 +52,7 @@ describe('parsePreferences', () => {
     ).toEqual({ categories: ['technology'], sources: ['newsapi'], authors: [] });
   });
 
-  it('keeps valid providers and drops leftover publisher names', () => {
+  it('keeps valid providers and drops leftover names', () => {
     expect(
       parsePreferences({
         categories: [],

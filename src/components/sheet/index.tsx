@@ -68,7 +68,7 @@ export function SheetContent({ children }: { children?: ReactNode }) {
       anchor="left"
       open={open}
       onClose={() => setOpen(false)}
-      slotProps={{ paper: { className: cx(styles.paper, styles.side) } }}
+      slotProps={{ paper: { className: styles.paper } }}
     >
       <IconButton
         aria-label="Close"
