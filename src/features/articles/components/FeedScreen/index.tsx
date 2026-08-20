@@ -27,9 +27,16 @@ type FeedScreenProps = {
   description: string;
   controller: ArticleFiltersController;
   feed: ArticleFeedState;
+  emptyDescription?: string;
 };
 
-export function FeedScreen({ heading, description, controller, feed }: FeedScreenProps) {
+export function FeedScreen({
+  heading,
+  description,
+  controller,
+  feed,
+  emptyDescription,
+}: FeedScreenProps) {
   const isDesktop = useMediaQuery('(min-width: 1024px)', { noSsr: true });
   const { filters, setFilters, clearAll, activeFilterCount, dateRangeError } = controller;
   const filterProps: FilterPanelProps = {
@@ -64,7 +71,11 @@ export function FeedScreen({ heading, description, controller, feed }: FeedScree
         <ProviderSetupNotice />
         <PartialFailureNotice failures={feed.failures} />
 
-        <FeedContent feed={feed} onClearFilters={clearAll} />
+        <FeedContent
+          feed={feed}
+          onClearFilters={clearAll}
+          {...(emptyDescription !== undefined ? { emptyDescription } : {})}
+        />
       </section>
     </div>
   );
@@ -73,9 +84,11 @@ export function FeedScreen({ heading, description, controller, feed }: FeedScree
 function FeedContent({
   feed,
   onClearFilters,
+  emptyDescription,
 }: {
   feed: ArticleFeedState;
   onClearFilters: () => void;
+  emptyDescription?: string;
 }) {
   if (CONFIGURED_PROVIDER_IDS.length === 0) return <NoProvidersState />;
   if (feed.isInitialLoading) return <FeedSkeleton />;
@@ -90,7 +103,12 @@ function FeedContent({
   }
 
   if (feed.isEmpty) {
-    return <FeedEmptyState onClearFilters={onClearFilters} />;
+    return (
+      <FeedEmptyState
+        onClearFilters={onClearFilters}
+        {...(emptyDescription !== undefined ? { description: emptyDescription } : {})}
+      />
+    );
   }
 
   return (
@@ -98,7 +116,7 @@ function FeedContent({
       {feed.hiddenCount > 0 && (
         <p className={styles.hiddenCount}>
           {feed.hiddenCount} loaded {feed.hiddenCount === 1 ? 'article is' : 'articles are'} hidden
-          by the current filters.
+          because they do not match.
         </p>
       )}
       <ArticleFeed feed={feed} />

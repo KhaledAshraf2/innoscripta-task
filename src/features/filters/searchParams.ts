@@ -160,8 +160,9 @@ export function buildArticleQuery({
   const rangeIsValid = isDateRangeValid(filters);
   const preferred = extraSources.filter((id) => availableProviders.includes(id));
   const scope = preferred.length > 0 ? preferred : availableProviders;
-  const requested = filters.sources.filter((id) => scope.includes(id));
-  const providers = filters.sources.length > 0 ? requested : scope;
+  const configuredSources = filters.sources.filter((id) => availableProviders.includes(id));
+  const requested = configuredSources.filter((id) => scope.includes(id));
+  const providers = configuredSources.length > 0 ? requested : scope;
 
   return {
     search: filters.search,

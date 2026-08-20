@@ -25,6 +25,7 @@ export function ForYouPage() {
     refine: (article) =>
       matchesPreferences(article, preferences) &&
       matchesClientFilters(article, controller.filters),
+    enabled: hasAny,
   });
 
   if (!hasAny) {
@@ -49,6 +50,7 @@ export function ForYouPage() {
       description="Filtered by your saved categories, sources and authors."
       controller={controller}
       feed={feed}
+      emptyDescription="Try different filters, or add more categories, sources or authors in Preferences."
     />
   );
 }

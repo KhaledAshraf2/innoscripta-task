@@ -8,6 +8,8 @@ type UseArticleFeedInput = {
   query: ArticleQuery;
   /** Applied after fetch for filters the APIs cannot express (source, and category on NewsAPI). */
   refine?: ((article: Article) => boolean) | undefined;
+  /** Skip the request entirely (For you with no saved preferences). */
+  enabled?: boolean;
 };
 
 export type ArticleFeed = {
@@ -38,7 +40,7 @@ export type ArticleFeed = {
 /** Stop auto-filling after this many pages so a rare author cannot hammer rate limits. */
 const AUTO_FILL_PAGE_LIMIT = 8;
 
-export function useArticleFeed({ query, refine }: UseArticleFeedInput): ArticleFeed {
+export function useArticleFeed({ query, refine, enabled = true }: UseArticleFeedInput): ArticleFeed {
   const {
     data,
     error,
@@ -49,7 +51,10 @@ export function useArticleFeed({ query, refine }: UseArticleFeedInput): ArticleF
     hasNextPage,
     fetchNextPage,
     refetch,
-  } = useInfiniteQuery(articleFeedQueryOptions(query));
+  } = useInfiniteQuery({
+    ...articleFeedQueryOptions(query),
+    enabled,
+  });
 
   const pages = data?.pages ?? [];
   const loaded = sortByPublishedAtDesc(dedupeArticles(pages.flatMap((page) => page.articles)));

@@ -16,14 +16,14 @@ const NAV_ITEMS = [
 ] as const;
 
 export function Header() {
-  const { pathname } = useLocation();
+  const { pathname, search: searchParams } = useLocation();
   const { filters, setFilters } = useArticleFilters();
   const showSearch = FEED_ROUTES.includes(pathname);
 
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <NavLink to="/" className={styles.brand ?? ''}>
+        <NavLink to={{ pathname: '/', search: searchParams }} className={styles.brand ?? ''}>
           <NewspaperIcon fontSize="small" aria-hidden="true" />
           <span className={styles.brandLabel}>News Hub</span>
         </NavLink>
@@ -44,7 +44,7 @@ export function Header() {
             <Button
               key={item.to}
               component={NavLink}
-              to={item.to}
+              to={{ pathname: item.to, search: searchParams }}
               end={item.to === '/'}
               variant="ghost"
               size="sm"

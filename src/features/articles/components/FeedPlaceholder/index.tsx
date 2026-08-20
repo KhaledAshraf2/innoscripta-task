@@ -32,12 +32,18 @@ function FeedPlaceholder({ icon, title, description, action }: FeedPlaceholderPr
   );
 }
 
-export function FeedEmptyState({ onClearFilters }: { onClearFilters: () => void }) {
+export function FeedEmptyState({
+  onClearFilters,
+  description = 'Try a different keyword, widen the date range, or clear the filters to see the full feed.',
+}: {
+  onClearFilters: () => void;
+  description?: string;
+}) {
   return (
     <FeedPlaceholder
       icon={<InboxIcon className={styles.glyph} />}
-      title="No articles match your filters"
-      description="Try a different keyword, widen the date range, or clear the filters to see the full feed."
+      title="No articles match"
+      description={description}
       action={{ label: 'Clear all filters', onClick: onClearFilters }}
     />
   );

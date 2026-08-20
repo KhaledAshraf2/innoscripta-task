@@ -188,6 +188,24 @@ describe('buildArticleQuery', () => {
     ).toEqual([]);
   });
 
+  it('ignores a source that is not available instead of fetching nothing', () => {
+    expect(
+      buildArticleQuery({
+        filters: { ...DEFAULT_FILTERS, sources: ['nyt'] },
+        availableProviders: ['guardian'],
+      }).providers,
+    ).toEqual(['guardian']);
+  });
+
+  it('keeps available sources from the filter and drops unavailable ones', () => {
+    expect(
+      buildArticleQuery({
+        filters: { ...DEFAULT_FILTERS, sources: ['nyt', 'guardian'] },
+        availableProviders: ['guardian'],
+      }).providers,
+    ).toEqual(['guardian']);
+  });
+
   it('ignores an impossible date range instead of returning nothing', () => {
     const query = buildArticleQuery({
       filters: { ...DEFAULT_FILTERS, from: '2026-02-01', to: '2026-01-01' },
