@@ -17,7 +17,7 @@ The take-home asks for a React + TypeScript frontend, at least three news APIs, 
 | Personalized feed                   | **For you** (`/for-you`) plus **Preferences** (`/preferences`) for sources, categories and authors |
 | Mobile-responsive layout            | Filter sheet on small screens, stacked header, readable cards                                      |
 | Three data sources                  | NewsAPI.org, The Guardian, The New York Times                                                      |
-| Docker                              | `Dockerfile` + `docker-compose.yml` + `nginx.conf` — see [Run with Docker](#run-with-docker)       |
+| Docker                              | `Dockerfile` + `docker-compose.yml` + `nginx.conf`                                                 |
 
 A provider without a key is skipped. The UI lists missing keys and links to where each one is created, so the app still runs with one, two or three providers.
 
@@ -95,18 +95,6 @@ docker compose up --build
 4. Stop with `Ctrl+C`, or `docker compose down` in another terminal.
 
 Compose reads `VITE_*` from your shell or from that `.env` file and passes them as **build arguments**. After you change a key, run `docker compose up --build` again.
-
-Without Compose:
-
-```bash
-docker build \
-  --build-arg VITE_NEWS_API_KEY=... \
-  --build-arg VITE_GUARDIAN_API_KEY=... \
-  --build-arg VITE_NYT_API_KEY=... \
-  -t news-hub .
-
-docker run --rm -p 8080:80 news-hub
-```
 
 ---
 

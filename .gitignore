@@ -14,10 +14,9 @@ dist-ssr
 
 .pnpm-store
 
-# Local API keys
-.env
+# Extra env files (local overrides). `.env` is tracked so Compose and Vite
+# share the same keys.
 .env.*
-!.env.development
 !.env.example
 
 # Editor directories and files

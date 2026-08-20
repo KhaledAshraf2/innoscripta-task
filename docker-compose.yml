@@ -3,7 +3,7 @@ services:
     build:
       context: .
       args:
-        # Read from your shell or a local .env file next to this compose file.
+        # Read from your local .env file next to this compose file.
         VITE_NEWS_API_KEY: ${VITE_NEWS_API_KEY:-}
         VITE_GUARDIAN_API_KEY: ${VITE_GUARDIAN_API_KEY:-}
         VITE_NYT_API_KEY: ${VITE_NYT_API_KEY:-}
