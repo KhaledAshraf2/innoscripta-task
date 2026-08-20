@@ -42,7 +42,9 @@ export function isAbortError(error: unknown): boolean {
 export function isRetryableApiError(error: unknown): boolean {
   if (!isApiError(error)) return false;
   if (error.kind === 'network' || error.kind === 'rate_limit') return true;
-  return error.kind === 'http' && error.status !== undefined && error.status >= 500;
+  return (
+    error.kind === 'http' && error.status !== undefined && error.status >= 500
+  );
 }
 
 /**
@@ -60,7 +62,10 @@ export function rejectUnlessProviderOk(
   const trimmed = message?.trim();
   throw new ApiError({
     kind: 'provider',
-    message: trimmed && trimmed.length > 0 ? trimmed : 'The news provider reported a failure.',
+    message:
+      trimmed && trimmed.length > 0
+        ? trimmed
+        : 'The news provider reported a failure.',
   });
 }
 
@@ -93,7 +98,8 @@ export async function requestJson<T>({
     if (isAbortError(error)) throw error;
     throw new ApiError({
       kind: 'network',
-      message: 'Could not reach the service. Check your connection and try again.',
+      message:
+        'Could not reach the service. Check your connection and try again.',
     });
   }
 
@@ -112,7 +118,10 @@ export async function requestJson<T>({
   try {
     payload = await response.json();
   } catch {
-    throw new ApiError({ kind: 'parse', message: 'Response was not valid JSON.' });
+    throw new ApiError({
+      kind: 'parse',
+      message: 'Response was not valid JSON.',
+    });
   }
 
   const parsed = schema.safeParse(payload);

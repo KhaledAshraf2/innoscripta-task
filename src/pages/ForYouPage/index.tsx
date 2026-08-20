@@ -8,7 +8,7 @@ import { useArticleFeed } from '@/features/articles/hooks/useArticleFeed';
 import { buildArticleQuery } from '@/features/filters/searchParams';
 import { useArticleFilters } from '@/features/filters/useArticleFilters';
 import { matchesPreferences } from '@/features/preferences/applyPreferences';
-import { usePreferences } from '@/features/preferences/preferencesContext';
+import { usePreferences } from '@/features/preferences/PreferencesContext';
 import styles from './ForYouPage.module.css';
 
 export function ForYouPage() {

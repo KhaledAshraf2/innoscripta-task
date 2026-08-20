@@ -1,6 +1,5 @@
 import { type ReactNode, useState } from 'react';
 import { PROVIDER_IDS, type ArticleCategory, type ProviderId } from '@/features/articles/types';
-import { PreferencesContext } from '@/features/preferences/preferencesContext';
 import {
   clearPreferences,
   DEFAULT_PREFERENCES,
@@ -9,6 +8,7 @@ import {
   writePreferences,
   type Preferences,
 } from '@/features/preferences/storage';
+import { PreferencesContext } from './context';
 
 function addTo(list: readonly string[], value: string): readonly string[] {
   const trimmed = value.trim();

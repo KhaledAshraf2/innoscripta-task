@@ -10,7 +10,7 @@ import {
   ARTICLE_CATEGORY_LABELS,
 } from '@/features/articles/types';
 import { TokenListEditor } from '@/features/preferences/components/TokenListEditor';
-import { usePreferences } from '@/features/preferences/preferencesContext';
+import { usePreferences } from '@/features/preferences/PreferencesContext';
 import styles from './PreferencesPanel.module.css';
 
 export function PreferencesPanel() {
